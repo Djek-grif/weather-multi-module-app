@@ -3,6 +3,7 @@ import com.djekgrif.weather.buildlogic.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginExtension
+import org.gradle.api.tasks.testing.Test
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -27,7 +28,16 @@ class JvmDomainConventionPlugin : Plugin<Project> {
             }
         }
         dependencies {
-            add("implementation", libs.findLibrary("kotlinx-coroutines-core").get())
+            // api: Flow / CoroutineDispatcher appear in domain public signatures.
+            add("api", libs.findLibrary("kotlinx-coroutines-core").get())
+
+            add("testImplementation", libs.findLibrary("junit-jupiter").get())
+            add("testImplementation", libs.findLibrary("turbine").get())
+            add("testImplementation", libs.findLibrary("assertk").get())
+            add("testImplementation", libs.findLibrary("kotlinx-coroutines-test").get())
+            add("testRuntimeOnly", libs.findLibrary("junit-platform-launcher").get())
         }
+
+        tasks.withType(Test::class.java).configureEach { useJUnitPlatform() }
     }
 }
