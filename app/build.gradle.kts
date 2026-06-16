@@ -18,6 +18,7 @@ android {
 
 dependencies {
     implementation(projects.core.domain)
+    implementation(projects.core.data)
     implementation(projects.core.presentation)
     implementation(projects.core.designSystem)
     implementation(projects.feature.home.presentation)
