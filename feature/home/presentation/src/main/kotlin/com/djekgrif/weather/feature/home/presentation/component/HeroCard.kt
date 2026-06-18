@@ -1,5 +1,6 @@
 package com.djekgrif.weather.feature.home.presentation.component
 
+import androidx.compose.animation.core.EaseInOut
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -40,8 +41,8 @@ fun HeroCard(
     val floatTransition = rememberInfiniteTransition(label = "hero-float")
     val floatY by floatTransition.animateFloat(
         initialValue = 0f,
-        targetValue = -7f,
-        animationSpec = infiniteRepeatable(tween(4500), RepeatMode.Reverse),
+        targetValue = -18f,
+        animationSpec = infiniteRepeatable(tween(1800, easing = EaseInOut), RepeatMode.Reverse),
         label = "hero-float-y",
     )
 
@@ -66,7 +67,7 @@ fun HeroCard(
                 imageUrl = weather.iconUrl,
                 contentDescription = stringResource(R.string.cd_weather_icon),
                 modifier = Modifier.graphicsLayer { translationY = floatY.dp.toPx() },
-                size = 110.dp,
+                size = 140.dp,
             )
             Text(
                 text = weather.temperature,

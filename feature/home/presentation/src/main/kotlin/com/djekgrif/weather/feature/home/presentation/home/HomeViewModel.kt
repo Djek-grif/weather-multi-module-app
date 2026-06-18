@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
@@ -39,8 +39,12 @@ class HomeViewModel(
     private val cityToLoad = combine(cityFlow, refreshTrigger) { city, _ -> city }
 
     private val weatherFlow = cityToLoad
-        .flatMapLatest { city -> getCurrentWeather(city) }
-        .onEach { isRefreshing.value = false }
+        .flatMapLatest { city ->
+            // Keep the refresh spinner up until the network round-trip finishes (not the
+            // instantly-emitted cached value), then clear it.
+            getCurrentWeather(city)
+                .onCompletion { isRefreshing.value = false }
+        }
 
     private val forecastFlow = cityToLoad
         .flatMapLatest { city -> getWeeklyForecast(city) }

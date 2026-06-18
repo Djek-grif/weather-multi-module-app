@@ -57,13 +57,17 @@ fun DailyForecast.toUi(
         } else {
             day.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
         },
-        iconUrl = weatherIconUrl(iconCode),
+        // A daily summary always shows the day-time icon variant (…d), never the night (…n) one.
+        iconUrl = weatherIconUrl(iconCode.toDayIcon()),
         description = description.titlecase(),
         high = tempMax.toDegrees(),
         low = tempMin.toDegrees(),
         isToday = day == today,
     )
 }
+
+/** OpenWeatherMap icon codes end in `d` (day) or `n` (night); force the day variant. */
+private fun String.toDayIcon(): String = if (endsWith("n")) "${dropLast(1)}d" else this
 
 private fun Double.toDegrees(): String = "${roundToInt()}°"
 

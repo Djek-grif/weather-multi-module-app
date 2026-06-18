@@ -1,5 +1,6 @@
 package com.djekgrif.weather.feature.home.presentation.component
 
+import androidx.compose.animation.core.EaseInOut
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -101,9 +102,15 @@ private fun SunArc(progress: Float, modifier: Modifier = Modifier) {
     val pulse = rememberInfiniteTransition(label = "sun-pulse")
     val pulseScale by pulse.animateFloat(
         initialValue = 1f,
-        targetValue = 1.15f,
-        animationSpec = infiniteRepeatable(tween(2800), RepeatMode.Reverse),
+        targetValue = 1.35f,
+        animationSpec = infiniteRepeatable(tween(1500, easing = EaseInOut), RepeatMode.Reverse),
         label = "sun-pulse-scale",
+    )
+    val glowAlpha by pulse.animateFloat(
+        initialValue = 0.35f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(tween(1500, easing = EaseInOut), RepeatMode.Reverse),
+        label = "sun-glow-alpha",
     )
     val t = progress.coerceIn(0f, 1f)
     val sunSize = 24.dp
@@ -141,8 +148,8 @@ private fun SunArc(progress: Float, modifier: Modifier = Modifier) {
                 style = Stroke(width = 2.5.dp.toPx(), cap = StrokeCap.Round),
             )
             drawCircle(
-                color = weatherColors.sunGlow,
-                radius = 11.dp.toPx() * pulseScale,
+                color = weatherColors.sunGlow.copy(alpha = glowAlpha),
+                radius = 14.dp.toPx() * pulseScale,
                 center = sun,
             )
         }
