@@ -19,8 +19,10 @@ android {
 dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.data)
+    implementation(projects.core.database)
     implementation(projects.core.presentation)
     implementation(projects.core.designSystem)
+    implementation(projects.feature.home.data)
     implementation(projects.feature.home.presentation)
     implementation(projects.feature.search.presentation)
 

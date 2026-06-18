@@ -21,6 +21,7 @@ dependencies {
     // Kotlin sub-plugins applied by-id from convention plugins must be on the runtime classpath.
     implementation(libs.compose.compiler.gradlePlugin)
     implementation(libs.kotlin.serialization.gradlePlugin)
+    implementation(libs.ksp.gradlePlugin)
 }
 
 gradlePlugin {
@@ -56,6 +57,10 @@ gradlePlugin {
         register("serialization") {
             id = "weather.serialization"
             implementationClass = "SerializationConventionPlugin"
+        }
+        register("room") {
+            id = "weather.room"
+            implementationClass = "RoomConventionPlugin"
         }
     }
 }
