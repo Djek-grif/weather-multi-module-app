@@ -13,6 +13,8 @@ data class WeatherResponseDto(
     val sys: SysDto = SysDto(),
     val name: String = "",
     val dt: Long = 0,
+    /** Shift in seconds from UTC for the city. */
+    val timezone: Int = 0,
 )
 
 @SuppressLint("UnsafeOptInUsageError")

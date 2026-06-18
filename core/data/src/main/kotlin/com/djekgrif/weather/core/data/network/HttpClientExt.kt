@@ -1,6 +1,5 @@
 package com.djekgrif.weather.core.data.network
 
-import com.djekgrif.weather.core.data.BuildConfig
 import com.djekgrif.weather.core.domain.util.DataError
 import com.djekgrif.weather.core.domain.util.Result
 import io.ktor.client.HttpClient
@@ -9,17 +8,25 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
+import io.ktor.http.appendPathSegments
 import io.ktor.util.network.UnresolvedAddressException
 import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.SerializationException
 
+/**
+ * Performs a GET against a RELATIVE [route] (path only, e.g. "data/2.5/weather"). The base URL and
+ * the `appid`/`units` defaults configured on the client are merged in by Ktor precisely because the
+ * request URL is relative — do NOT pass an absolute URL here or those defaults will be dropped.
+ */
 suspend inline fun <reified Response : Any> HttpClient.getResult(
     route: String,
     queryParameters: Map<String, Any?> = emptyMap(),
 ): Result<Response, DataError.Network> {
     return safeCall {
         get {
-            url(constructRoute(route))
+            url {
+                appendPathSegments(route.trim('/').split('/'))
+            }
             queryParameters.forEach { (key, value) ->
                 parameter(key, value)
             }
@@ -63,13 +70,5 @@ suspend inline fun <reified T> responseToResult(
         503 -> Result.Error(DataError.Network.SERVICE_UNAVAILABLE)
         in 500..599 -> Result.Error(DataError.Network.SERVER_ERROR)
         else -> Result.Error(DataError.Network.UNKNOWN)
-    }
-}
-
-fun constructRoute(route: String): String {
-    return when {
-        route.contains(BuildConfig.BASE_URL) -> route
-        route.startsWith("/") -> BuildConfig.BASE_URL + route
-        else -> BuildConfig.BASE_URL + "/$route"
     }
 }

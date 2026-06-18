@@ -23,6 +23,7 @@ fun WeatherResponseDto.toCurrentWeather(): CurrentWeather {
         pressure = main.pressure,
         sunrise = sys.sunrise,
         sunset = sys.sunset,
+        timezoneOffsetSeconds = timezone,
     )
 }
 

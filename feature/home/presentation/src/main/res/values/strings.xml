@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cd_search">Search city</string>
+    <string name="cd_location">Location</string>
+    <string name="cd_weather_icon">Weather condition</string>
+
+    <string name="tab_today">Today</string>
+    <string name="tab_week">Week</string>
+
+    <string name="feels_like">Feels like %1$s</string>
+    <string name="hero_high_low">H: %1$s   L: %2$s</string>
+
+    <string name="stat_humidity_label">Humidity</string>
+    <string name="stat_wind_label">Wind</string>
+    <string name="stat_pressure_label">hPa</string>
+
+    <string name="sunrise">SUNRISE</string>
+    <string name="sunset">SUNSET</string>
+
+    <string name="error_title">Couldn\'t load weather</string>
+    <string name="action_retry">Retry</string>
+</resources>

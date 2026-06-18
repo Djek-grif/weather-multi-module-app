@@ -15,6 +15,7 @@ data class CurrentWeatherEntity(
     val pressure: Int,
     val sunrise: Long,
     val sunset: Long,
+    val timezoneOffsetSeconds: Int,
     /** Epoch millis the row was cached, for TTL checks. */
     val cachedAt: Long,
 )

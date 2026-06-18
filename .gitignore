@@ -32,3 +32,4 @@ google-services.json
 
 # Android Profiling
 *.hprof
+/design_weather_app

@@ -12,4 +12,6 @@ data class CurrentWeather(
     val pressure: Int,
     val sunrise: Long,
     val sunset: Long,
+    /** The city's shift in seconds from UTC, used to render sunrise/sunset in local time. */
+    val timezoneOffsetSeconds: Int,
 )

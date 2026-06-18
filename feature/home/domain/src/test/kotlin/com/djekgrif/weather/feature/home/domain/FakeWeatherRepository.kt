@@ -44,6 +44,7 @@ class FakeWeatherRepository : WeatherRepository {
             pressure = 1012,
             sunrise = 1_700_000_000L,
             sunset = 1_700_040_000L,
+            timezoneOffsetSeconds = 0,
         )
     }
 }

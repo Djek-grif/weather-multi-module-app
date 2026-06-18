@@ -4,6 +4,7 @@ import android.app.Application
 import com.djekgrif.weather.core.data.di.coreDataModule
 import com.djekgrif.weather.core.database.di.coreDatabaseModule
 import com.djekgrif.weather.feature.home.data.di.homeDataModule
+import com.djekgrif.weather.feature.home.presentation.di.homePresentationModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -20,6 +21,7 @@ class WeatherApplication : Application() {
                 coreDatabaseModule,
                 // features
                 homeDataModule,
+                homePresentationModule,
             )
         }
     }

@@ -87,6 +87,7 @@ class WeatherRepositoryImpTest {
             pressure = 1012,
             sunrise = 1000,
             sunset = 2000,
+            timezoneOffsetSeconds = 0,
         )
         val cachedLondon = london.copy(temperature = 12.0, description = "cached")
     }

@@ -17,9 +17,12 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
         }
         dependencies {
             add("implementation", libs.findLibrary("androidx-lifecycle-viewmodel-compose").get())
+            add("implementation", libs.findLibrary("androidx-lifecycle-viewmodel-ktx").get())
+            add("implementation", libs.findLibrary("androidx-lifecycle-runtime-compose").get())
             add("implementation", libs.findLibrary("androidx-navigation-compose").get())
             add("implementation", libs.findLibrary("koin-androidx-compose").get())
             add("implementation", libs.findLibrary("coil-compose").get())
+            add("implementation", libs.findLibrary("androidx-compose-material-icons-extended").get())
         }
     }
 }
