@@ -30,15 +30,16 @@ class WeatherRepositoryImpTest {
             localDataSource = local,
             preferencesDataSource = preferences,
             dispatchers = TestDispatcherProvider(UnconfinedTestDispatcher()),
+            now = { FIXED_NOW },
         )
     }
 
     @Test
-    fun `getCurrentWeather with no cache emits fresh result and caches it`() = runTest {
+    fun `getCurrentWeather with no cache emits fresh result stamped with now and caches it`() = runTest {
         remote.currentWeatherResult = Result.Success(london)
 
         repository.getCurrentWeather("London").test {
-            assertThat(awaitItem()).isEqualTo(Result.Success(london))
+            assertThat(awaitItem()).isEqualTo(Result.Success(london.copy(lastUpdated = FIXED_NOW)))
             awaitComplete()
         }
         assertThat(local.getCurrentWeather("London")).isEqualTo(london)
@@ -51,7 +52,18 @@ class WeatherRepositoryImpTest {
 
         repository.getCurrentWeather("London").test {
             assertThat(awaitItem()).isEqualTo(Result.Success(cachedLondon))
-            assertThat(awaitItem()).isEqualTo(Result.Success(london))
+            assertThat(awaitItem()).isEqualTo(Result.Success(london.copy(lastUpdated = FIXED_NOW)))
+            awaitComplete()
+        }
+    }
+
+    @Test
+    fun `getCurrentWeather keeps cached value when remote fails`() = runTest {
+        local.upsertCurrentWeather(cachedLondon, cachedAt = 0)
+        remote.currentWeatherResult = Result.Error(DataError.Network.NO_INTERNET)
+
+        repository.getCurrentWeather("London").test {
+            assertThat(awaitItem()).isEqualTo(Result.Success(cachedLondon))
             awaitComplete()
         }
     }
@@ -76,6 +88,7 @@ class WeatherRepositoryImpTest {
     }
 
     private companion object {
+        const val FIXED_NOW = 1_700_000_000_000L
         val london = CurrentWeather(
             cityName = "London",
             temperature = 20.0,

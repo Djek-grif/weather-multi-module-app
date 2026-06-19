@@ -2,6 +2,9 @@ package com.djekgrif.weather.feature.home.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.djekgrif.weather.core.data.connectivity.ConnectivityObserver
+import com.djekgrif.weather.core.domain.settings.GetTemperatureUnitUseCase
+import com.djekgrif.weather.core.domain.settings.TemperatureUnit
 import com.djekgrif.weather.core.domain.util.DataError
 import com.djekgrif.weather.core.domain.util.Result
 import com.djekgrif.weather.core.presentation.mapper.toUiText
@@ -27,6 +30,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -34,10 +38,12 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalCoroutinesApi::class)
 class HomeViewModel(
     getSelectedCity: GetSelectedCityUseCase,
+    getTemperatureUnit: GetTemperatureUnitUseCase,
     private val getCurrentWeather: GetCurrentWeatherUseCase,
     private val getWeeklyForecast: GetWeeklyForecastUseCase,
     private val getCurrentCity: GetCurrentCityUseCase,
     private val saveSelectedCity: SaveSelectedCityUseCase,
+    connectivityObserver: ConnectivityObserver,
 ) : ViewModel() {
 
     private val selectedTab = MutableStateFlow(HomeTab.Today)
@@ -45,6 +51,10 @@ class HomeViewModel(
     private val isRefreshing = MutableStateFlow(false)
     private val isDetectingLocation = MutableStateFlow(false)
     private val locationError = MutableStateFlow<UiText?>(null)
+
+    private val temperatureUnit = getTemperatureUnit()
+    // Assume connected until the OS reports otherwise, so combine never stalls waiting for an emit.
+    private val isConnected = connectivityObserver.isConnected.onStart { emit(true) }
 
     private val cityFlow: Flow<String?> = getSelectedCity().distinctUntilChanged()
 
@@ -74,28 +84,33 @@ class HomeViewModel(
         LocationState(detecting, error)
     }
 
+    private val uiFlags = combine(isRefreshing, temperatureUnit, isConnected) { refreshing, unit, connected ->
+        UiFlags(refreshing, unit, connected)
+    }
+
     val state: StateFlow<HomeUiState> = combine(
         cityFlow,
         selectedTab,
         weatherData,
-        isRefreshing,
         locationState,
-    ) { city, tab, data, refreshing, location ->
+        uiFlags,
+    ) { city, tab, data, location, flags ->
         val weather = (data.weather as? Result.Success)?.data
         val error = (data.weather as? Result.Error)?.error
-        val forecast = (data.forecast as? Result.Success)?.data.orEmpty().map { it.toUi() }
+        val forecast = (data.forecast as? Result.Success)?.data.orEmpty().map { it.toUi(flags.unit) }
         val today = forecast.firstOrNull()
         HomeUiState(
             cityName = weather?.cityName ?: city.orEmpty(),
             selectedTab = tab,
-            currentWeather = weather?.toUi(today?.high, today?.low),
+            currentWeather = weather?.toUi(today?.high, today?.low, flags.unit),
             forecast = forecast,
             isLoading = city != null && weather == null && error == null,
-            isRefreshing = refreshing,
+            isRefreshing = flags.refreshing,
             errorMessage = error?.toUiText(),
             showLocationPrompt = city == null && !location.isDetecting,
             isDetectingLocation = location.isDetecting,
             locationError = location.error,
+            isOffline = !flags.isConnected,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -137,5 +152,11 @@ class HomeViewModel(
     private data class LocationState(
         val isDetecting: Boolean,
         val error: UiText?,
+    )
+
+    private data class UiFlags(
+        val refreshing: Boolean,
+        val unit: TemperatureUnit,
+        val isConnected: Boolean,
     )
 }

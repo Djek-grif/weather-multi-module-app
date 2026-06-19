@@ -42,3 +42,5 @@ include(":feature:home:presentation")
 include(":feature:search:domain")
 include(":feature:search:data")
 include(":feature:search:presentation")
+
+include(":feature:settings:presentation")

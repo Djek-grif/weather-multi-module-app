@@ -2,6 +2,7 @@ package com.djekgrif.weather.feature.home.presentation.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -10,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,6 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.djekgrif.weather.core.designsystem.component.ErrorState
 import com.djekgrif.weather.core.designsystem.component.LoadingIndicator
+import com.djekgrif.weather.core.designsystem.component.OfflineBanner
+import com.djekgrif.weather.core.designsystem.component.WeatherLoadingSkeleton
 import com.djekgrif.weather.core.designsystem.theme.Dimens
 import com.djekgrif.weather.core.designsystem.theme.WeatherTheme
 import com.djekgrif.weather.core.presentation.permission.rememberLocationPermissionRequester
@@ -45,6 +49,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun HomeRoot(
     onNavigateToSearch: () -> Unit,
+    onNavigateToSettings: () -> Unit,
     viewModel: HomeViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -56,6 +61,7 @@ fun HomeRoot(
         onTabSelected = viewModel::onTabSelected,
         onRefresh = viewModel::onRefresh,
         onSearchClick = onNavigateToSearch,
+        onSettingsClick = onNavigateToSettings,
         onUseMyLocation = requestLocation,
     )
 }
@@ -67,10 +73,17 @@ fun HomeScreen(
     onTabSelected: (HomeTab) -> Unit,
     onRefresh: () -> Unit,
     onSearchClick: () -> Unit,
+    onSettingsClick: () -> Unit,
     onUseMyLocation: () -> Unit,
 ) {
     Scaffold(
-        topBar = { HomeTopBar(city = state.cityName, onSearchClick = onSearchClick) },
+        topBar = {
+            HomeTopBar(
+                city = state.cityName,
+                onSearchClick = onSearchClick,
+                onSettingsClick = onSettingsClick,
+            )
+        },
         bottomBar = { HomeBottomBar(selectedTab = state.selectedTab, onTabSelected = onTabSelected) },
         containerColor = MaterialTheme.colorScheme.background,
     ) { padding ->
@@ -88,7 +101,7 @@ fun HomeScreen(
                     onSearch = onSearchClick,
                 )
 
-                state.isLoading -> LoadingIndicator()
+                state.isLoading -> WeatherLoadingSkeleton()
 
                 state.currentWeather == null && state.errorMessage != null -> ErrorState(
                     message = state.errorMessage.asString(),
@@ -96,14 +109,17 @@ fun HomeScreen(
                 )
 
                 state.currentWeather != null -> {
-                    PullToRefreshBox(
-                        isRefreshing = state.isRefreshing,
-                        onRefresh = onRefresh,
-                        modifier = Modifier.fillMaxSize(),
-                    ) {
-                        when (state.selectedTab) {
-                            HomeTab.Today -> TodayScreen(weather = state.currentWeather)
-                            HomeTab.Week -> WeekScreen(forecast = state.forecast)
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        if (state.isOffline) OfflineBanner()
+                        PullToRefreshBox(
+                            isRefreshing = state.isRefreshing,
+                            onRefresh = onRefresh,
+                            modifier = Modifier.fillMaxSize(),
+                        ) {
+                            when (state.selectedTab) {
+                                HomeTab.Today -> TodayScreen(weather = state.currentWeather)
+                                HomeTab.Week -> WeekScreen(forecast = state.forecast)
+                            }
                         }
                     }
                 }
@@ -117,6 +133,7 @@ fun HomeScreen(
 private fun HomeTopBar(
     city: String,
     onSearchClick: () -> Unit,
+    onSettingsClick: () -> Unit,
 ) {
     CenterAlignedTopAppBar(
         title = {
@@ -138,6 +155,12 @@ private fun HomeTopBar(
                 Icon(
                     imageVector = Icons.Filled.Search,
                     contentDescription = stringResource(R.string.cd_search),
+                )
+            }
+            IconButton(onClick = onSettingsClick) {
+                Icon(
+                    imageVector = Icons.Filled.Settings,
+                    contentDescription = stringResource(R.string.cd_settings),
                 )
             }
         },
@@ -205,6 +228,7 @@ private fun HomeScreenPreview() {
             onTabSelected = {},
             onRefresh = {},
             onSearchClick = {},
+            onSettingsClick = {},
             onUseMyLocation = {},
         )
     }

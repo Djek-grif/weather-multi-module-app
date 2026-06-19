@@ -18,4 +18,5 @@ data class HomeUiState(
     val showLocationPrompt: Boolean = false,
     val isDetectingLocation: Boolean = false,
     val locationError: UiText? = null,
+    val isOffline: Boolean = false,
 )

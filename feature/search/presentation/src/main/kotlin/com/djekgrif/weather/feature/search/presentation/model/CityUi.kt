@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 
 @Immutable
 data class CityUi(
+    val id: String,
     val name: String,
     val region: String,
 )

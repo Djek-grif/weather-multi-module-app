@@ -32,6 +32,7 @@ fun CurrentWeatherEntity.toCurrentWeather(): CurrentWeather = CurrentWeather(
     sunrise = sunrise,
     sunset = sunset,
     timezoneOffsetSeconds = timezoneOffsetSeconds,
+    lastUpdated = cachedAt,
 )
 
 fun DailyForecast.toEntity(cityName: String, cachedAt: Long): DailyForecastEntity =

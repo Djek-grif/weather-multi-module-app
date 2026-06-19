@@ -11,11 +11,16 @@ import com.djekgrif.weather.core.data.network.HttpClientFactory
 import com.djekgrif.weather.core.data.network.NetworkConfig
 import com.djekgrif.weather.core.data.preferences.DataStorePreferencesDataSource
 import com.djekgrif.weather.core.data.preferences.PreferencesDataSource
+import com.djekgrif.weather.core.data.settings.SettingsRepositoryImp
 import com.djekgrif.weather.core.domain.dispatcher.DispatcherProvider
 import com.djekgrif.weather.core.domain.dispatcher.StandardDispatcherProvider
+import com.djekgrif.weather.core.domain.settings.GetTemperatureUnitUseCase
+import com.djekgrif.weather.core.domain.settings.SetTemperatureUnitUseCase
+import com.djekgrif.weather.core.domain.settings.SettingsRepository
 import io.ktor.client.engine.okhttp.OkHttp
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
@@ -38,4 +43,7 @@ val coreDataModule = module {
         }
     }
     singleOf(::DataStorePreferencesDataSource) { bind<PreferencesDataSource>() }
+    singleOf(::SettingsRepositoryImp) { bind<SettingsRepository>() }
+    factoryOf(::GetTemperatureUnitUseCase)
+    factoryOf(::SetTemperatureUnitUseCase)
 }

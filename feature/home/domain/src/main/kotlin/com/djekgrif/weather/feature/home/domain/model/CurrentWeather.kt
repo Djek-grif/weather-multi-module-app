@@ -14,4 +14,6 @@ data class CurrentWeather(
     val sunset: Long,
     /** The city's shift in seconds from UTC, used to render sunrise/sunset in local time. */
     val timezoneOffsetSeconds: Int,
+    /** Epoch millis the data was last refreshed (from cache or network); null when unknown. */
+    val lastUpdated: Long? = null,
 )

@@ -67,7 +67,7 @@ fun WeatherMainCard(
         ) {
             WeatherIcon(
                 imageUrl = weather.iconUrl,
-                contentDescription = stringResource(R.string.cd_weather_icon),
+                contentDescription = weather.description,
                 modifier = Modifier.graphicsLayer { translationY = floatY.dp.toPx() },
                 size = 140.dp,
             )
@@ -87,6 +87,13 @@ fun WeatherMainCard(
                 style = MaterialTheme.typography.bodyLarge,
                 color = weatherColors.heroSubText,
             )
+            weather.lastUpdatedLabel?.let { label ->
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = weatherColors.heroSubText,
+                )
+            }
             if (weather.highTemperature.isNotBlank() &&  weather.lowTemperature.isNotBlank()) {
                 val string = stringResource(
                     R.string.max_temp,

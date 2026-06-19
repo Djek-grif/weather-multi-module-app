@@ -17,7 +17,8 @@ import org.koin.dsl.module
 val homeDataModule = module {
     singleOf(::WeatherRemoteDataSourceImp) { bind<WeatherRemoteDataSource>() }
     singleOf(::WeatherLocalDataSourceImp) { bind<WeatherLocalDataSource>() }
-    singleOf(::WeatherRepositoryImp) { bind<WeatherRepository>() }
+    // Explicit construction so WeatherRepositoryImp's default `now` time source is used.
+    single<WeatherRepository> { WeatherRepositoryImp(get(), get(), get(), get()) }
 
     singleOf(::LocationRemoteDataSourceImp) { bind<LocationRemoteDataSource>() }
     singleOf(::LocationRepositoryImp) { bind<LocationRepository>() }

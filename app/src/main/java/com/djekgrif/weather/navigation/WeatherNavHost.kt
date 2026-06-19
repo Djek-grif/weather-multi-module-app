@@ -7,6 +7,8 @@ import com.djekgrif.weather.feature.home.presentation.navigation.HomeRoute
 import com.djekgrif.weather.feature.home.presentation.navigation.homeGraph
 import com.djekgrif.weather.feature.search.presentation.navigation.SearchRoute
 import com.djekgrif.weather.feature.search.presentation.navigation.searchGraph
+import com.djekgrif.weather.feature.settings.presentation.navigation.SettingsRoute
+import com.djekgrif.weather.feature.settings.presentation.navigation.settingsGraph
 
 @Composable
 fun WeatherNavHost() {
@@ -17,8 +19,12 @@ fun WeatherNavHost() {
     ) {
         homeGraph(
             onNavigateToSearch = { navController.navigate(SearchRoute) },
+            onNavigateToSettings = { navController.navigate(SettingsRoute) },
         )
         searchGraph(
+            onBack = { navController.popBackStack() },
+        )
+        settingsGraph(
             onBack = { navController.popBackStack() },
         )
     }

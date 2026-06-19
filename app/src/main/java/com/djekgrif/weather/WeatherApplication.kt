@@ -8,6 +8,7 @@ import com.djekgrif.weather.feature.home.data.di.homeDataModule
 import com.djekgrif.weather.feature.home.presentation.di.homePresentationModule
 import com.djekgrif.weather.feature.search.data.di.searchDataModule
 import com.djekgrif.weather.feature.search.presentation.di.searchPresentationModule
+import com.djekgrif.weather.feature.settings.presentation.di.settingsPresentationModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -28,6 +29,7 @@ class WeatherApplication : Application() {
                 homePresentationModule,
                 searchDataModule,
                 searchPresentationModule,
+                settingsPresentationModule,
             )
         }
     }

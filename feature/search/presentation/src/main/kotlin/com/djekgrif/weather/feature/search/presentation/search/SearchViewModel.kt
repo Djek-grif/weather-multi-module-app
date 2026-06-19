@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlin.text.orEmpty
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class SearchViewModel(
@@ -87,7 +88,11 @@ class SearchViewModel(
     }
 
     private fun Result<List<City>, DataError>.toSearchResults(): SearchResults = when (this) {
-        is Result.Success -> SearchResults(cities = data.map { it.toUi() })
+        is Result.Success -> SearchResults(cities = data.distinctBy {
+            // We could have multiple cities from API with the same name, so we need to distinguish them by country, state, and coordinates.
+            "${it.name}|${it.country}|${it.state.orEmpty()}|${it.latitude}|${it.longitude}"
+        }.map { it.toUi() })
+
         is Result.Error -> SearchResults(error = error.toUiText())
     }
 

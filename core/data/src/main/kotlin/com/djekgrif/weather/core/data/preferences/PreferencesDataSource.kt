@@ -10,6 +10,7 @@ interface PreferencesDataSource {
 
     companion object {
         const val SELECTED_CITY_KEY = "selected_city"
+        const val TEMPERATURE_UNIT_KEY = "temperature_unit"
     }
     fun getString(key: String, defaultValue: String? = null): Flow<String?>
     suspend fun putString(key: String, value: String)

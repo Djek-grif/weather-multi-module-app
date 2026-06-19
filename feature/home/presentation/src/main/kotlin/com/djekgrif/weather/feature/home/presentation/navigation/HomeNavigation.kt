@@ -10,8 +10,12 @@ data object HomeRoute
 
 fun NavGraphBuilder.homeGraph(
     onNavigateToSearch: () -> Unit,
+    onNavigateToSettings: () -> Unit,
 ) {
     composable<HomeRoute> {
-        HomeRoot(onNavigateToSearch = onNavigateToSearch)
+        HomeRoot(
+            onNavigateToSearch = onNavigateToSearch,
+            onNavigateToSettings = onNavigateToSettings,
+        )
     }
 }

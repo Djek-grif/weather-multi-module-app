@@ -118,7 +118,7 @@ fun SearchScreen(
                         )
                     }
                 }
-                items(items = state.results, key = { it.name + it.region }) { city ->
+                items(items = state.results, key = { it.id }) { city ->
                     CityRow(city = city, onClick = { onCitySelected(city) })
                 }
             }
@@ -290,9 +290,9 @@ private fun SearchScreenPreview() {
             state = SearchUiState(
                 query = "San",
                 results = listOf(
-                    CityUi("San Francisco", "California, US"),
-                    CityUi("San Diego", "California, US"),
-                    CityUi("Santiago", "CL"),
+                    CityUi("1","San Francisco", "California, US"),
+                    CityUi("2", "San Diego", "California, US"),
+                    CityUi("3","Santiago", "CL"),
                 ),
             ),
             onQueryChange = {},

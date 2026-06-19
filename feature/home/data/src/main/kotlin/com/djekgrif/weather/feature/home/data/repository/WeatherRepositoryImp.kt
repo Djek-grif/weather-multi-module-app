@@ -23,6 +23,7 @@ class WeatherRepositoryImp(
     private val localDataSource: WeatherLocalDataSource,
     private val preferencesDataSource: PreferencesDataSource,
     private val dispatchers: DispatcherProvider,
+    private val now: () -> Long = System::currentTimeMillis,
 ) : WeatherRepository {
 
     override fun getCurrentWeather(city: String): Flow<Result<CurrentWeather, DataError>> = flow {
@@ -31,8 +32,9 @@ class WeatherRepositoryImp(
 
         when (val remote = remoteDataSource.getCurrentWeather(city)) {
             is Result.Success -> {
-                localDataSource.upsertCurrentWeather(remote.data, System.currentTimeMillis())
-                emit(Result.Success(remote.data))
+                val timestamp = now()
+                localDataSource.upsertCurrentWeather(remote.data, timestamp)
+                emit(Result.Success(remote.data.copy(lastUpdated = timestamp)))
             }
 
             is Result.Error -> {
@@ -49,7 +51,7 @@ class WeatherRepositoryImp(
 
         when (val remote = remoteDataSource.getWeeklyForecast(city)) {
             is Result.Success -> {
-                localDataSource.replaceForecast(city, remote.data, System.currentTimeMillis())
+                localDataSource.replaceForecast(city, remote.data, now())
                 emit(Result.Success(remote.data))
             }
 

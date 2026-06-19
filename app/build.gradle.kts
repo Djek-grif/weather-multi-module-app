@@ -27,6 +27,7 @@ dependencies {
     implementation(projects.feature.home.presentation)
     implementation(projects.feature.search.data)
     implementation(projects.feature.search.presentation)
+    implementation(projects.feature.settings.presentation)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

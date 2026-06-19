@@ -18,6 +18,8 @@ data class CurrentWeatherUi(
     val sunset: String,
     /** Sun position along the sunrise→sunset arc, 0f..1f. */
     val sunProgress: Float,
+    /** Relative "Updated 5 min ago" label; null when the refresh time is unknown. */
+    val lastUpdatedLabel: String? = null,
 )
 
 @Immutable
