@@ -1,5 +1,6 @@
 package com.djekgrif.weather.feature.home.presentation.di
 
+import com.djekgrif.weather.feature.home.domain.usecase.GetCurrentCityUseCase
 import com.djekgrif.weather.feature.home.domain.usecase.GetCurrentWeatherUseCase
 import com.djekgrif.weather.feature.home.domain.usecase.GetSelectedCityUseCase
 import com.djekgrif.weather.feature.home.domain.usecase.GetWeeklyForecastUseCase
@@ -14,6 +15,7 @@ val homePresentationModule = module {
     factoryOf(::GetWeeklyForecastUseCase)
     factoryOf(::GetSelectedCityUseCase)
     factoryOf(::SaveSelectedCityUseCase)
+    factoryOf(::GetCurrentCityUseCase)
 
     viewModelOf(::HomeViewModel)
 }

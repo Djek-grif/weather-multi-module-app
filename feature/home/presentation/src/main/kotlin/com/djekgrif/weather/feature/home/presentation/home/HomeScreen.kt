@@ -34,7 +34,9 @@ import com.djekgrif.weather.core.designsystem.component.ErrorState
 import com.djekgrif.weather.core.designsystem.component.LoadingIndicator
 import com.djekgrif.weather.core.designsystem.theme.Dimens
 import com.djekgrif.weather.core.designsystem.theme.WeatherTheme
+import com.djekgrif.weather.core.presentation.permission.rememberLocationPermissionRequester
 import com.djekgrif.weather.feature.home.presentation.R
+import com.djekgrif.weather.feature.home.presentation.component.LocationPrompt
 import com.djekgrif.weather.feature.home.presentation.model.CurrentWeatherUi
 import com.djekgrif.weather.feature.home.presentation.model.DailyForecastUi
 import com.djekgrif.weather.feature.home.presentation.model.HomeTab
@@ -46,11 +48,15 @@ fun HomeRoot(
     viewModel: HomeViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val requestLocation = rememberLocationPermissionRequester { granted ->
+        if (granted) viewModel.onUseMyLocation() else viewModel.onLocationPermissionDenied()
+    }
     HomeScreen(
         state = state,
         onTabSelected = viewModel::onTabSelected,
         onRefresh = viewModel::onRefresh,
         onSearchClick = onNavigateToSearch,
+        onUseMyLocation = requestLocation,
     )
 }
 
@@ -61,13 +67,8 @@ fun HomeScreen(
     onTabSelected: (HomeTab) -> Unit,
     onRefresh: () -> Unit,
     onSearchClick: () -> Unit,
+    onUseMyLocation: () -> Unit,
 ) {
-    val highLow = if (state.todayHigh != null && state.todayLow != null) {
-        stringResource(R.string.hero_high_low, state.todayHigh, state.todayLow)
-    } else {
-        null
-    }
-
     Scaffold(
         topBar = { HomeTopBar(city = state.cityName, onSearchClick = onSearchClick) },
         bottomBar = { HomeBottomBar(selectedTab = state.selectedTab, onTabSelected = onTabSelected) },
@@ -79,6 +80,14 @@ fun HomeScreen(
                 .padding(padding),
         ) {
             when {
+                state.isDetectingLocation -> LoadingIndicator()
+
+                state.showLocationPrompt -> LocationPrompt(
+                    errorMessage = state.locationError?.asString(),
+                    onUseMyLocation = onUseMyLocation,
+                    onSearch = onSearchClick,
+                )
+
                 state.isLoading -> LoadingIndicator()
 
                 state.currentWeather == null && state.errorMessage != null -> ErrorState(
@@ -93,11 +102,7 @@ fun HomeScreen(
                         modifier = Modifier.fillMaxSize(),
                     ) {
                         when (state.selectedTab) {
-                            HomeTab.Today -> TodayScreen(
-                                weather = state.currentWeather,
-                                highLow = highLow,
-                            )
-
+                            HomeTab.Today -> TodayScreen(weather = state.currentWeather)
                             HomeTab.Week -> WeekScreen(forecast = state.forecast)
                         }
                     }
@@ -173,6 +178,8 @@ private fun HomeScreenPreview() {
                 currentWeather = CurrentWeatherUi(
                     cityName = "San Francisco",
                     temperature = "18°",
+                    highTemperature = "18°",
+                    lowTemperature = "10°",
                     feelsLike = "17°",
                     description = "Partly Cloudy",
                     iconUrl = "",
@@ -194,12 +201,11 @@ private fun HomeScreenPreview() {
                         isToday = it == 0,
                     )
                 },
-                todayHigh = "18°",
-                todayLow = "10°",
             ),
             onTabSelected = {},
             onRefresh = {},
             onSearchClick = {},
+            onUseMyLocation = {},
         )
     }
 }

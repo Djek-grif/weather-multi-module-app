@@ -12,9 +12,10 @@ data class HomeUiState(
     val selectedTab: HomeTab = HomeTab.Today,
     val currentWeather: CurrentWeatherUi? = null,
     val forecast: List<DailyForecastUi> = emptyList(),
-    val todayHigh: String? = null,
-    val todayLow: String? = null,
     val isLoading: Boolean = false,
     val isRefreshing: Boolean = false,
     val errorMessage: UiText? = null,
+    val showLocationPrompt: Boolean = false,
+    val isDetectingLocation: Boolean = false,
+    val locationError: UiText? = null,
 )

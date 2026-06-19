@@ -17,7 +17,6 @@ import com.djekgrif.weather.feature.home.presentation.model.CurrentWeatherUi
 @Composable
 fun TodayScreen(
     weather: CurrentWeatherUi,
-    highLow: String?,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -27,7 +26,7 @@ fun TodayScreen(
             .padding(Dimens.spaceMedium),
         verticalArrangement = Arrangement.spacedBy(Dimens.spaceMedium),
     ) {
-        WeatherMainCard(weather = weather, highLow = highLow)
+        WeatherMainCard(weather = weather)
         StatsRow(weather = weather)
         SunPathCard(weather = weather)
     }

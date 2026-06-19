@@ -18,7 +18,7 @@ private val timeFormatter = DateTimeFormatter.ofPattern("h:mm a", Locale.getDefa
 /** Full remote icon URL for an OpenWeatherMap condition code, built here so the UI stays dumb. */
 fun weatherIconUrl(iconCode: String): String = "$ICON_BASE_URL/$iconCode@4x.png"
 
-fun CurrentWeather.toUi(
+fun CurrentWeather.toUi(highTemperature: String?, lowTemperature: String?,
     now: Long = System.currentTimeMillis(),
 ): CurrentWeatherUi {
     val sunProgress = if (sunset > sunrise) {
@@ -32,6 +32,8 @@ fun CurrentWeather.toUi(
     return CurrentWeatherUi(
         cityName = cityName,
         temperature = temperature.toDegrees(),
+        highTemperature = highTemperature ?: "",
+        lowTemperature = lowTemperature ?: "",
         feelsLike = feelsLike.toDegrees(),
         description = description.titlecase(),
         iconUrl = weatherIconUrl(iconCode),

@@ -8,7 +8,8 @@
     <string name="tab_week">Week</string>
 
     <string name="feels_like">Feels like %1$s</string>
-    <string name="hero_high_low">H: %1$s   L: %2$s</string>
+    <string name="max_temp">Max: %1$s</string>
+    <string name="min_temp">Min: %1$s</string>
 
     <string name="stat_humidity_label">Humidity</string>
     <string name="stat_wind_label">Wind</string>
@@ -19,4 +20,15 @@
 
     <string name="error_title">Couldn\'t load weather</string>
     <string name="action_retry">Retry</string>
+
+    <string name="location_prompt_title">See your local weather</string>
+    <string name="location_prompt_subtitle">Use your location to get the current forecast, or search for a city.</string>
+    <string name="action_use_my_location">Use my location</string>
+    <string name="action_search_city">Search city</string>
+    <string name="location_detecting">Finding your location…</string>
+
+    <string name="error_location_permission_denied">Location permission is needed to detect your city. You can still search instead.</string>
+    <string name="error_location_unavailable">Couldn\'t determine your location. Make sure location is on, or search instead.</string>
+    <string name="error_location_city_not_found">We couldn\'t find a city for your location. Try searching instead.</string>
+    <string name="error_location_network">Couldn\'t reach the location service. Check your connection and try again.</string>
 </resources>

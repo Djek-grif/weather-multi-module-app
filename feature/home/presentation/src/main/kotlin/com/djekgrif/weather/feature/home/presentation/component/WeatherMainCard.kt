@@ -9,8 +9,11 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -34,7 +37,6 @@ import com.djekgrif.weather.feature.home.presentation.model.CurrentWeatherUi
 @Composable
 fun WeatherMainCard(
     weather: CurrentWeatherUi,
-    highLow: String?,
     modifier: Modifier = Modifier,
 ) {
     val weatherColors = WeatherTheme.weatherColors
@@ -70,30 +72,44 @@ fun WeatherMainCard(
                 size = 140.dp,
             )
             Text(
+                modifier = Modifier.padding(start = Dimens.spaceLarge),
                 text = weather.temperature,
                 style = MaterialTheme.typography.displayLarge,
-                color = weatherColors.heroText,
+                color = weatherColors.heroText
             )
             Text(
                 text = weather.description,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleLarge,
                 color = weatherColors.heroText,
             )
             Text(
                 text = stringResource(R.string.feels_like, weather.feelsLike),
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyLarge,
                 color = weatherColors.heroSubText,
             )
-            if (highLow != null) {
+            if (weather.highTemperature.isNotBlank() &&  weather.lowTemperature.isNotBlank()) {
+                val string = stringResource(
+                    R.string.max_temp,
+                    weather.highTemperature,
+                    weather.lowTemperature,
+                )
                 HorizontalDivider(
                     modifier = Modifier.padding(vertical = Dimens.spaceSmall),
                     color = weatherColors.heroDivider,
                 )
-                Text(
-                    text = highLow,
-                    style = MaterialTheme.typography.titleSmall,
-                    color = weatherColors.heroSubText,
-                )
+                Row {
+                    Text(
+                        text = stringResource(R.string.max_temp, weather.highTemperature),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = weatherColors.heroSubText,
+                    )
+                    Spacer(modifier = Modifier.width(Dimens.spaceMedium))
+                    Text(
+                        text = stringResource(R.string.min_temp, weather.lowTemperature),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = weatherColors.heroSubText,
+                    )
+                }
             }
         }
     }

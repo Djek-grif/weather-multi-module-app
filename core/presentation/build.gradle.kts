@@ -11,4 +11,5 @@ dependencies {
     implementation(projects.core.domain)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.compose)
 }

@@ -3,6 +3,7 @@ package com.djekgrif.weather
 import android.app.Application
 import com.djekgrif.weather.core.data.di.coreDataModule
 import com.djekgrif.weather.core.database.di.coreDatabaseModule
+import com.djekgrif.weather.core.location.di.coreLocationModule
 import com.djekgrif.weather.feature.home.data.di.homeDataModule
 import com.djekgrif.weather.feature.home.presentation.di.homePresentationModule
 import com.djekgrif.weather.feature.search.data.di.searchDataModule
@@ -21,6 +22,7 @@ class WeatherApplication : Application() {
                 // core
                 coreDataModule,
                 coreDatabaseModule,
+                coreLocationModule,
                 // features
                 homeDataModule,
                 homePresentationModule,

@@ -6,6 +6,8 @@ import androidx.compose.runtime.Immutable
 data class CurrentWeatherUi(
     val cityName: String,
     val temperature: String,
+    val highTemperature: String,
+    val lowTemperature: String,
     val feelsLike: String,
     val description: String,
     val iconUrl: String,
