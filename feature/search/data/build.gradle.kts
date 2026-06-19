@@ -1,6 +1,7 @@
 plugins {
     id("weather.android.library")
     id("weather.ktor")
+    id("weather.koin")
 }
 
 android {

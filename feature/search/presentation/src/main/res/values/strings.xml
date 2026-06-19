@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_placeholder">Search city</string>
+    <string name="cd_back">Back</string>
+    <string name="cd_clear">Clear</string>
+    <string name="cd_city">City</string>
+    <string name="results_header">RESULTS</string>
+    <string name="no_cities_title">No cities found</string>
+    <string name="no_cities_message">We couldn\'t find a match for \"%1$s\". Try a different spelling.</string>
+</resources>

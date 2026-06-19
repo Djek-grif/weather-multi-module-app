@@ -24,11 +24,13 @@ dependencies {
     implementation(projects.core.designSystem)
     implementation(projects.feature.home.data)
     implementation(projects.feature.home.presentation)
+    implementation(projects.feature.search.data)
     implementation(projects.feature.search.presentation)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.navigation.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.djekgrif.weather.core.designsystem.theme.WeatherTheme
-import com.djekgrif.weather.feature.home.presentation.home.HomeRoot
+import com.djekgrif.weather.navigation.WeatherNavHost
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -13,8 +13,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             WeatherTheme {
-                // Search navigation is wired in Stage 6.
-                HomeRoot(onNavigateToSearch = {})
+                WeatherNavHost()
             }
         }
     }
