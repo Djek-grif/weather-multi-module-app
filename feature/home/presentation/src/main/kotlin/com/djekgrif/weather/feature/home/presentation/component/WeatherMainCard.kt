@@ -32,7 +32,7 @@ import com.djekgrif.weather.feature.home.presentation.R
 import com.djekgrif.weather.feature.home.presentation.model.CurrentWeatherUi
 
 @Composable
-fun HeroCard(
+fun WeatherMainCard(
     weather: CurrentWeatherUi,
     highLow: String?,
     modifier: Modifier = Modifier,

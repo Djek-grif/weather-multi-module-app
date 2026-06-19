@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -76,20 +77,14 @@ fun SunPathCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Bottom,
             ) {
-                SunLabel(
-                    label = stringResource(R.string.sunrise),
-                    time = weather.sunrise,
-                    tint = WeatherTheme.weatherColors.sunrise,
-                    iconLeading = true,
-                    alignment = Alignment.Start,
-                )
-                SunLabel(
-                    label = stringResource(R.string.sunset),
-                    time = weather.sunset,
-                    tint = WeatherTheme.weatherColors.sunset,
-                    iconLeading = false,
-                    alignment = Alignment.End,
-                )
+                SunLabel(time = weather.sunrise, alignment = Alignment.Start) {
+                    TwilightIcon(tint = WeatherTheme.weatherColors.sunrise, flipped = false)
+                    SunLabelText(text = stringResource(R.string.sunrise))
+                }
+                SunLabel(time = weather.sunset, alignment = Alignment.End) {
+                    SunLabelText(text = stringResource(R.string.sunset))
+                    TwilightIcon(tint = WeatherTheme.weatherColors.sunset, flipped = true)
+                }
             }
         }
     }
@@ -105,12 +100,6 @@ private fun SunArc(progress: Float, modifier: Modifier = Modifier) {
         targetValue = 1.35f,
         animationSpec = infiniteRepeatable(tween(1500, easing = EaseInOut), RepeatMode.Reverse),
         label = "sun-pulse-scale",
-    )
-    val glowAlpha by pulse.animateFloat(
-        initialValue = 0.35f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(tween(1500, easing = EaseInOut), RepeatMode.Reverse),
-        label = "sun-glow-alpha",
     )
     val t = progress.coerceIn(0f, 1f)
     val sunSize = 24.dp
@@ -147,11 +136,6 @@ private fun SunArc(progress: Float, modifier: Modifier = Modifier) {
                 color = weatherColors.sun,
                 style = Stroke(width = 2.5.dp.toPx(), cap = StrokeCap.Round),
             )
-            drawCircle(
-                color = weatherColors.sunGlow.copy(alpha = glowAlpha),
-                radius = 14.dp.toPx() * pulseScale,
-                center = sun,
-            )
         }
 
         Icon(
@@ -176,11 +160,9 @@ private fun SunArc(progress: Float, modifier: Modifier = Modifier) {
 
 @Composable
 private fun SunLabel(
-    label: String,
     time: String,
-    tint: Color,
-    iconLeading: Boolean,
     alignment: Alignment.Horizontal,
+    header: @Composable RowScope.() -> Unit,
 ) {
     Column(
         horizontalAlignment = alignment,
@@ -189,29 +171,23 @@ private fun SunLabel(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(5.dp),
-        ) {
-            if (iconLeading) {
-                TwilightIcon(tint = tint, flipped = false)
-                Text(
-                    text = label,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            } else {
-                Text(
-                    text = label,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-                TwilightIcon(tint = tint, flipped = true)
-            }
-        }
+            content = header,
+        )
         Text(
             text = time,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurface,
         )
     }
+}
+
+@Composable
+private fun SunLabelText(text: String) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.labelSmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
 }
 
 @Composable
